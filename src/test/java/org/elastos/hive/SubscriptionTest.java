@@ -38,7 +38,7 @@ public class SubscriptionTest {
 
 	@BeforeClass
 	public void setup() {
-		AppContext appContext = AppContext.build(new AppContextProvider() {
+		appContext = AppContext.build(new AppContextProvider() {
 			@Override
 			public String getLocalDataDir() {
 				// TODO Auto-generated method stub
