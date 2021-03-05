@@ -33,7 +33,7 @@ public class VaultSubscription {
 		return service.checkSubscription();
 	}
 
-	public CompletableFuture<Void> setupBackup(BackupAuthenticator authenticator, String providerAddress) {
+	public CompletableFuture<Void> setBackup(String providerAddress) {
 		// TODO;
 		return null;
 	}
