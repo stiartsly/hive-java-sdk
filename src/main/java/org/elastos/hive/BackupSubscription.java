@@ -3,17 +3,18 @@ package org.elastos.hive;
 import java.util.concurrent.CompletableFuture;
 
 import org.elastos.hive.exception.HiveException;
+import org.elastos.hive.service.PaymentService;
 import org.elastos.hive.service.SubscriptionService;
 
 public class BackupSubscription {
 	private SubscriptionService service;
 
 	public BackupSubscription(AppContext context, String userDid, String providerAddress) throws HiveException {
-		service = new BackupSubscriptionImpl(context, userDid, providerAddress);
+		service = new SubscriptionProxy(context, userDid, providerAddress);
 	}
 
-	public CompletableFuture<BackupSubscription.Metadata> subscribe(String pricingPlan) {
-		return service.subscribe0(pricingPlan, BackupSubscription.Metadata.class);
+	public CompletableFuture<BackupInfo> subscribe(String pricingPlan) {
+		return service.subscribe0(pricingPlan, BackupInfo.class);
 	}
 
 	public CompletableFuture<Void> unsbuscribe() {
@@ -28,21 +29,20 @@ public class BackupSubscription {
 		return service.deactivate();
 	}
 
-	public CompletableFuture<BackupSubscription.Metadata> checkSubscription() {
+	public CompletableFuture<BackupInfo> checkSubscription() {
 		return service.checkSubscription();
 	}
 
-	public CompletableFuture<Void> upgrade() {
+	/*public CompletableFuture<Void> upgrade() {
 		return null;
-	}
+	}*/
 
-	public class Metadata {
+	public class BackupInfo {
 		// TODO;
 	}
 
-	class BackupSubscriptionImpl extends ServiceEndpoint implements SubscriptionService {
-
-		protected BackupSubscriptionImpl(AppContext context, String userDid, String providerAddress)
+	class SubscriptionProxy extends ServiceEndpoint implements SubscriptionService, PaymentService {
+		protected SubscriptionProxy(AppContext context, String userDid, String providerAddress)
 				throws HiveException {
 			super(context, providerAddress, userDid);
 		}
@@ -77,5 +77,16 @@ public class BackupSubscription {
 			return null;
 		}
 
+		@Override
+		public CompletableFuture<String> placeOrder(String planName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CompletableFuture<Void> payOrder(String orderId, String transactionId) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 }

@@ -10,11 +10,11 @@ public class VaultSubscription {
 	private SubscriptionService service;
 
 	public VaultSubscription(AppContext context, String userDid, String providerAddress) throws HiveException {
-		service = new SubscriptionImpl(context, userDid, providerAddress);
+		service = new SubscriptionProxy(context, userDid, providerAddress);
 	}
 
-	public CompletableFuture<VaultSubscription.MetaData> subscribe(String pricingPlan) {
-		return service.subscribe0(pricingPlan, VaultSubscription.MetaData.class);
+	public CompletableFuture<VaultInfo> subscribe(String pricingPlan) {
+		return service.subscribe0(pricingPlan, VaultInfo.class);
 	}
 
 	public CompletableFuture<Void> unsubscribe() {
@@ -29,7 +29,7 @@ public class VaultSubscription {
 		return service.deactivate();
 	}
 
-	public CompletableFuture<VaultSubscription.MetaData> checkSubscription() {
+	public CompletableFuture<VaultInfo> checkSubscription() {
 		return service.checkSubscription();
 	}
 
@@ -38,12 +38,12 @@ public class VaultSubscription {
 		return null;
 	}
 
-	public class MetaData {
+	public class VaultInfo {
 		// TODO;
 	}
 
-	class SubscriptionImpl extends ServiceEndpoint implements SubscriptionService, PaymentService {
-		SubscriptionImpl(AppContext context, String userDid, String providerAddress) throws HiveException {
+	class SubscriptionProxy extends ServiceEndpoint implements SubscriptionService, PaymentService {
+		SubscriptionProxy(AppContext context, String userDid, String providerAddress) throws HiveException {
 			super(context, providerAddress, userDid);
 		}
 
