@@ -2,8 +2,6 @@ package org.elastos.hive.service;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.elastos.hive.backup.BackupContext;
-
 public interface BackupService {
 	enum BackupResult {
 
@@ -11,9 +9,13 @@ public interface BackupService {
 
 	public CompletableFuture<Void> setupContext(BackupContext context);
 
-	public CompletableFuture<Void> start();
+	public CompletableFuture<Void> startBackup();
 
-	public CompletableFuture<Void> stop();
+	public CompletableFuture<Void> stopBackup();
+
+	public CompletableFuture<Void> restoreFrom();
+
+	public CompletableFuture<Void> stopRestore();
 
 	public CompletableFuture<BackupResult> checkResult();
 }

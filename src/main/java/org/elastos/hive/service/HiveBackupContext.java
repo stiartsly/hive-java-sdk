@@ -1,4 +1,4 @@
-package org.elastos.hive.backup;
+package org.elastos.hive.service;
 
 public abstract class HiveBackupContext implements BackupContext {
 	@Override

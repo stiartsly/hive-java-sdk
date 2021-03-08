@@ -5,12 +5,8 @@ import org.elastos.hive.service.BackupService;
 import org.elastos.hive.service.Database;
 import org.elastos.hive.service.FilesService;
 import org.elastos.hive.service.PubsubService;
-import org.elastos.hive.service.RestoreService;
-import org.elastos.hive.vault.BackupImpl;
-import org.elastos.hive.vault.DatabaseImpl;
-import org.elastos.hive.vault.FilesServiceImpl;
-import org.elastos.hive.vault.PubsubServiceImpl;
-import org.elastos.hive.vault.RestoreServiceImpl;
+import org.elastos.hive.service.ScriptingService;
+import org.elastos.hive.vault.ServiceBuilder;
 
 /**
  * This class explicitly represents the vault service subscribed by "myDid".
@@ -18,32 +14,33 @@ import org.elastos.hive.vault.RestoreServiceImpl;
 public class Vault extends ServiceEndpoint {
 	private FilesService 	filesService;
 	private Database	  	database;
+	private ScriptingService scripting;
 	private PubsubService 	pubsubService;
-
 	private BackupService 	backupService;
-	private RestoreService 	restoreService;
 
 	public Vault(AppContext context, String myDid) throws HiveException {
-		this(context, myDid, null);
+		super(context, null, myDid);
 	}
 
 	public Vault(AppContext context, String myDid, String preferredProviderAddress) throws HiveException {
-		super(context, preferredProviderAddress, myDid, myDid, null);
+		super(context, preferredProviderAddress, myDid);
 
-		this.filesService 	= new FilesServiceImpl(this);
-		this.database 		= new DatabaseImpl(this);
-		this.pubsubService 	= new PubsubServiceImpl(this);
-
-		this.backupService 	= new BackupImpl(this);
-		this.restoreService = new RestoreServiceImpl(this);
+		this.filesService 	= new ServiceBuilder(this).createFileService();
+		this.database 		= new ServiceBuilder(this).createDatabase();
+		this.pubsubService 	= new ServiceBuilder(this).createPubsubService();
+		this.backupService 	= new ServiceBuilder(this).createBackupService();
 	}
 
-	public FilesService getFileService() {
+	public FilesService getFilesService() {
 		return this.filesService;
 	}
 
 	public Database getDatabase() {
 		return this.database;
+	}
+
+	public ScriptingService getScripting() {
+		return this.scripting;
 	}
 
 	public PubsubService getPubsubService() {
@@ -52,9 +49,5 @@ public class Vault extends ServiceEndpoint {
 
 	public BackupService getBackupService() {
 		return this.backupService;
-	}
-
-	public RestoreService getRestoreService() {
-		return this.restoreService;
 	}
 }
