@@ -1,7 +1,7 @@
 package org.elastos.hive;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -17,7 +17,7 @@ public class AppContextTest {
 			assertTrue(true);
 		} catch (HiveException e) {
 			e.printStackTrace();
-			//assertTrue(false);
+			assertTrue(false);
 		}
 	}
 

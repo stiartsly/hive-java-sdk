@@ -33,11 +33,6 @@ public class VaultSubscription {
 		return service.checkSubscription();
 	}
 
-	public CompletableFuture<Void> setBackup(String providerAddress) {
-		// TODO;
-		return null;
-	}
-
 	public class VaultInfo {
 		// TODO;
 	}

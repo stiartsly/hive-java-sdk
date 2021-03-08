@@ -3,6 +3,7 @@ package org.elastos.hive.vault;
 import java.util.concurrent.CompletableFuture;
 
 import org.elastos.hive.Vault;
+import org.elastos.hive.backup.BackupContext;
 import org.elastos.hive.service.BackupService;
 
 public class BackupImpl implements BackupService {
@@ -25,6 +26,12 @@ public class BackupImpl implements BackupService {
 
 	@Override
 	public CompletableFuture<BackupResult> checkResult() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CompletableFuture<Void> setupContext(BackupContext context) {
 		// TODO Auto-generated method stub
 		return null;
 	}
