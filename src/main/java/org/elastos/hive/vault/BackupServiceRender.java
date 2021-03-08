@@ -6,8 +6,8 @@ import org.elastos.hive.Vault;
 import org.elastos.hive.backup.BackupContext;
 import org.elastos.hive.service.BackupService;
 
-public class BackupServiceImpl implements BackupService {
-	public BackupServiceImpl(Vault vault) {
+class BackupServiceRender implements BackupService {
+	public BackupServiceRender(Vault vault) {
 		// TODO Auto-generated constructor stub
 	}
 

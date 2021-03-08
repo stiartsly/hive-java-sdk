@@ -5,10 +5,7 @@ import org.elastos.hive.service.BackupService;
 import org.elastos.hive.service.Database;
 import org.elastos.hive.service.FilesService;
 import org.elastos.hive.service.PubsubService;
-import org.elastos.hive.vault.BackupServiceImpl;
-import org.elastos.hive.vault.DatabaseImpl;
-import org.elastos.hive.vault.FilesServiceImpl;
-import org.elastos.hive.vault.PubsubServiceImpl;
+import org.elastos.hive.vault.ServiceBuilder;
 
 /**
  * This class explicitly represents the vault service subscribed by "myDid".
@@ -20,20 +17,19 @@ public class Vault extends ServiceEndpoint {
 	private BackupService 	backupService;
 
 	public Vault(AppContext context, String myDid) throws HiveException {
-		this(context, myDid, null);
+		super(context, null, myDid);
 	}
 
 	public Vault(AppContext context, String myDid, String preferredProviderAddress) throws HiveException {
-		super(context, preferredProviderAddress, myDid, myDid, null);
+		super(context, preferredProviderAddress, myDid);
 
-		this.filesService 	= new FilesServiceImpl(this);
-		this.database 		= new DatabaseImpl(this);
-		this.pubsubService 	= new PubsubServiceImpl(this);
-
-		this.backupService 	= new BackupServiceImpl(this);
+		this.filesService 	= new ServiceBuilder(this).createFileService();
+		this.database 		= new ServiceBuilder(this).createDatabase();
+		this.pubsubService 	= new ServiceBuilder(this).createPubsubService();
+		this.backupService 	= new ServiceBuilder(this).createBackupService();
 	}
 
-	public FilesService getFileService() {
+	public FilesService getFilesService() {
 		return this.filesService;
 	}
 

@@ -5,9 +5,9 @@ import java.util.concurrent.CompletableFuture;
 import org.elastos.hive.Vault;
 import org.elastos.hive.service.FilesService;
 
-public class FilesServiceImpl implements FilesService {
+class FilesServiceRender implements FilesService {
 
-	public FilesServiceImpl(Vault vault) {
+	public FilesServiceRender(Vault vault) {
 		// TODO;
 	}
 
