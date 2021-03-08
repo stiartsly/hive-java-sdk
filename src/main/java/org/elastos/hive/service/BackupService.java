@@ -2,8 +2,6 @@ package org.elastos.hive.service;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.elastos.hive.backup.BackupContext;
-
 public interface BackupService {
 	enum BackupResult {
 

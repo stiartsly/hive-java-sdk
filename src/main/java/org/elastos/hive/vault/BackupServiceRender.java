@@ -3,7 +3,7 @@ package org.elastos.hive.vault;
 import java.util.concurrent.CompletableFuture;
 
 import org.elastos.hive.Vault;
-import org.elastos.hive.backup.BackupContext;
+import org.elastos.hive.service.BackupContext;
 import org.elastos.hive.service.BackupService;
 
 class BackupServiceRender implements BackupService {
