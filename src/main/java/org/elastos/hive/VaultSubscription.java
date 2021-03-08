@@ -10,7 +10,7 @@ public class VaultSubscription {
 	private SubscriptionService service;
 
 	public VaultSubscription(AppContext context, String userDid, String providerAddress) throws HiveException {
-		service = new SubscriptionProxy(context, userDid, providerAddress);
+		service = new SubscriptionRender(context, userDid, providerAddress);
 	}
 
 	public CompletableFuture<VaultInfo> subscribe(String pricingPlan) {
@@ -37,8 +37,8 @@ public class VaultSubscription {
 		// TODO;
 	}
 
-	class SubscriptionProxy extends ServiceEndpoint implements SubscriptionService, PaymentService {
-		SubscriptionProxy(AppContext context, String userDid, String providerAddress) throws HiveException {
+	class SubscriptionRender extends ServiceEndpoint implements SubscriptionService, PaymentService {
+		SubscriptionRender(AppContext context, String userDid, String providerAddress) throws HiveException {
 			super(context, providerAddress, userDid);
 		}
 

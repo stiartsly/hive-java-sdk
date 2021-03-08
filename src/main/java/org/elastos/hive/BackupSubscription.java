@@ -10,7 +10,7 @@ public class BackupSubscription {
 	private SubscriptionService service;
 
 	public BackupSubscription(AppContext context, String userDid, String providerAddress) throws HiveException {
-		service = new SubscriptionProxy(context, userDid, providerAddress);
+		service = new SubscriptionRender(context, userDid, providerAddress);
 	}
 
 	public CompletableFuture<BackupInfo> subscribe(String pricingPlan) {
@@ -33,16 +33,12 @@ public class BackupSubscription {
 		return service.checkSubscription();
 	}
 
-	/*public CompletableFuture<Void> upgrade() {
-		return null;
-	}*/
-
 	public class BackupInfo {
 		// TODO;
 	}
 
-	class SubscriptionProxy extends ServiceEndpoint implements SubscriptionService, PaymentService {
-		protected SubscriptionProxy(AppContext context, String userDid, String providerAddress)
+	class SubscriptionRender extends ServiceEndpoint implements SubscriptionService, PaymentService {
+		protected SubscriptionRender(AppContext context, String userDid, String providerAddress)
 				throws HiveException {
 			super(context, providerAddress, userDid);
 		}
