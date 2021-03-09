@@ -1,8 +1,12 @@
 package org.elastos.hive;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.elastos.hive.exception.HiveException;
+import org.elastos.hive.payment.Order;
+import org.elastos.hive.payment.PricingPlan;
+import org.elastos.hive.payment.Receipt;
 import org.elastos.hive.service.PaymentService;
 import org.elastos.hive.service.SubscriptionService;
 
@@ -73,13 +77,37 @@ public class VaultSubscription {
 		}
 
 		@Override
-		public CompletableFuture<String> placeOrder(String planName) {
+		public CompletableFuture<List<PricingPlan>> getPringPlanList() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public CompletableFuture<Void> payOrder(String orderId, String transactionId) {
+		public CompletableFuture<PricingPlan> getPricingPlan(String planName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CompletableFuture<Order> placeOrder(String planName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CompletableFuture<Order> getOrder(String orderId) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CompletableFuture<Receipt> payOrder(String orderId, String transId) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public CompletableFuture<Receipt> getReceipt(String receiptId) {
 			// TODO Auto-generated method stub
 			return null;
 		}
