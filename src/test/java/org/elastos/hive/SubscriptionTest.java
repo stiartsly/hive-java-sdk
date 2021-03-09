@@ -18,9 +18,9 @@ public class SubscriptionTest {
 
 			// subscribe vault service;
 			vs = new VaultSubscription(appContext, "your-vault-provider-address", "your-user-did");
-			vs.subscribe("your-pricing-plan")
-				.thenComposeAsync(info -> vs.activate())
-			    .thenComposeAsync(aVoid -> vs.setBackup("your-backup-provider-address"));
+//			vs.subscribe("your-pricing-plan")
+//				.thenComposeAsync(info -> vs.activate())
+//			    .thenComposeAsync(aVoid -> vs.setBackup("your-backup-provider-address"));
 
 
 			// subscribe backup service;

@@ -18,11 +18,11 @@ public class Vault extends ServiceEndpoint {
 	private PubsubService 	pubsubService;
 	private BackupService 	backupService;
 
-	public Vault(AppContext context, String myDid) throws HiveException {
+	public Vault(AppContext context, String myDid) {
 		super(context, null, myDid);
 	}
 
-	public Vault(AppContext context, String myDid, String preferredProviderAddress) throws HiveException {
+	public Vault(AppContext context, String myDid, String preferredProviderAddress) {
 		super(context, preferredProviderAddress, myDid);
 
 		this.filesService 	= new ServiceBuilder(this).createFileService();
