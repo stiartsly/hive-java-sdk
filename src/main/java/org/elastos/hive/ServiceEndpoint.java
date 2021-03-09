@@ -62,7 +62,7 @@ class ServiceEndpoint {
 		return null;
 	}
 
-	public AuthHelper getAuthHelper() {
-		return context.getAuthHelper();
+	protected AppContext getContext() {
+		return context;
 	}
 }

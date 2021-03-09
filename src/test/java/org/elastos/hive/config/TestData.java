@@ -98,8 +98,6 @@ public class TestData {
 	}
 
 	public CompletableFuture<Vault> getVault() {
-//		return this.client.getVault(nodeConfig.ownerDid(), nodeConfig.provider());
-//		return null;
 		return context.getVault(nodeConfig.ownerDid(), nodeConfig.provider());
 	}
 

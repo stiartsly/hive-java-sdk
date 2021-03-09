@@ -32,8 +32,6 @@ public class AppContext {
 	private String userDid;
 	@SuppressWarnings("unused")
 	private String providerAddress;
-	private AuthHelper authHelper;
-	private AuthenticationAdapter authenticationAdapter;
 
 	private AppContext(AppContextProvider provider, String userDid) {
 		this(provider, userDid, null);
@@ -41,8 +39,6 @@ public class AppContext {
 
 	private AppContext(AppContextProvider provider, String userDid, String providerAddress) {
 		this.contextProvider = provider;
-		this.authenticationAdapter = new AuthenticationAdapterImpl();
-		authHelper = new AuthHelper(provider, userDid, providerAddress, this.authenticationAdapter);
 	}
 
 	public static void setupResover(String resolver, String cacheDir) throws HiveException {
@@ -184,14 +180,7 @@ public class AppContext {
 		});
 	}
 
-	public AuthHelper getAuthHelper() {
-		return authHelper;
-	}
-
-	private static class AuthenticationAdapterImpl implements AuthenticationAdapter {
-		@Override
-		public synchronized CompletableFuture<String> getAuthorization(AppContextProvider context, String jwtToken) {
-			return context.getAuthorization(jwtToken);
-		}
+	public AppContextProvider getContextProvider() {
+		return contextProvider;
 	}
 }
