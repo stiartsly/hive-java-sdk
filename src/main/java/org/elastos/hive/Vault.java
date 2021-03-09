@@ -1,12 +1,15 @@
 package org.elastos.hive;
 
-import org.elastos.hive.exception.HiveException;
+import org.elastos.hive.connection.AuthHelper;
+import org.elastos.hive.connection.AuthenticationAdapter;
 import org.elastos.hive.service.BackupService;
 import org.elastos.hive.service.Database;
 import org.elastos.hive.service.FilesService;
 import org.elastos.hive.service.PubsubService;
 import org.elastos.hive.service.ScriptingService;
 import org.elastos.hive.vault.ServiceBuilder;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * This class explicitly represents the vault service subscribed by "myDid".
@@ -17,15 +20,19 @@ public class Vault extends ServiceEndpoint {
 	private ScriptingService scripting;
 	private PubsubService 	pubsubService;
 	private BackupService 	backupService;
+	private AuthHelper      authHelper;
 
-	public Vault(AppContext context, String myDid) throws HiveException {
+	public Vault(AppContext context, String myDid) {
 		super(context, null, myDid);
 	}
 
-	public Vault(AppContext context, String myDid, String preferredProviderAddress) throws HiveException {
+	public Vault(AppContext context, String myDid, String preferredProviderAddress) {
 		super(context, preferredProviderAddress, myDid);
 
-		this.filesService 	= new ServiceBuilder(this).createFileService();
+		this.authHelper = new AuthHelper(getContext().getContextProvider(), myDid, preferredProviderAddress,
+				(ctx, jwtToken) -> ctx.getAuthorization(jwtToken));
+
+		this.filesService 	= new ServiceBuilder(this).createFilesService();
 		this.database 		= new ServiceBuilder(this).createDatabase();
 		this.pubsubService 	= new ServiceBuilder(this).createPubsubService();
 		this.backupService 	= new ServiceBuilder(this).createBackupService();
@@ -49,5 +56,9 @@ public class Vault extends ServiceEndpoint {
 
 	public BackupService getBackupService() {
 		return this.backupService;
+	}
+
+	public AuthHelper getAuthHelper() {
+		return this.authHelper;
 	}
 }
