@@ -16,6 +16,9 @@ import org.elastos.hive.utils.Logger;
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * This is used for representing 3rd-party application.
+ */
 public class TestData {
 
 	private DApp appInstanceDid;

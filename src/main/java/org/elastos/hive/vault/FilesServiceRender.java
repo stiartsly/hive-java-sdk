@@ -21,6 +21,7 @@ import org.elastos.hive.connection.ConnectionManager;
 import org.elastos.hive.entity.file.UploadOutputStream;
 import org.elastos.hive.exception.FileNotFoundException;
 import org.elastos.hive.exception.HiveException;
+import org.elastos.hive.network.FilesApi;
 import org.elastos.hive.service.FilesService;
 import org.elastos.hive.utils.JsonUtil;
 import org.elastos.hive.utils.HttpUtil;
@@ -28,14 +29,14 @@ import retrofit2.Response;
 
 class FilesServiceRender implements FilesService {
 
-	private Vault vault;
 	private AuthHelper authHelper;
 	private ConnectionManager connectionManager;
+	private FilesApi filesApi;
 
 	public FilesServiceRender(Vault vault) {
-		this.vault = vault;
 		this.authHelper = vault.getAuthHelper();
 		this.connectionManager = authHelper.getConnectionManager();
+		this.filesApi = connectionManager.getNetworkApi(FilesApi.class);
 	}
 
 	@Override
@@ -77,9 +78,7 @@ class FilesServiceRender implements FilesService {
 		try {
 			Response<ResponseBody> response;
 
-			response = this.connectionManager.getFileApi()
-					.downloader(remoteFile)
-					.execute();
+			response = filesApi.downloader(remoteFile).execute();
 			int code = response.code();
 			if(404 == code) {
 				throw new FileNotFoundException(FileNotFoundException.EXCEPTION);
@@ -125,9 +124,7 @@ class FilesServiceRender implements FilesService {
 			String json = JsonUtil.serialize(map);
 			Response<ResponseBody> response;
 
-			response = this.connectionManager.getFileApi()
-					.deleteFolder(createJsonRequestBody(json))
-					.execute();
+			response = filesApi.deleteFolder(createJsonRequestBody(json)).execute();
 			authHelper.checkResponseWithRetry(response);
 			return true;
 		} catch (Exception e) {
@@ -155,9 +152,7 @@ class FilesServiceRender implements FilesService {
 			String json = JsonUtil.serialize(map);
 			Response<ResponseBody> response;
 
-			response = this.connectionManager.getFileApi()
-					.move(createJsonRequestBody(json))
-					.execute();
+			response = filesApi.move(createJsonRequestBody(json)).execute();
 			authHelper.checkResponseWithRetry(response);
 			return true;
 		} catch (Exception e) {
@@ -185,9 +180,7 @@ class FilesServiceRender implements FilesService {
 			String json = JsonUtil.serialize(map);
 			Response<ResponseBody> response;
 
-			response = this.connectionManager.getFileApi()
-					.copy(createJsonRequestBody(json))
-					.execute();
+			response = filesApi.copy(createJsonRequestBody(json)).execute();
 			authHelper.checkResponseWithRetry(response);
 			return true;
 		} catch (Exception e) {
@@ -208,9 +201,7 @@ class FilesServiceRender implements FilesService {
 
 	private String hashImp(String remoteFile) throws HiveException {
 		try {
-			Response response = this.connectionManager.getFileApi()
-					.hash(remoteFile)
-					.execute();
+			Response response = filesApi.hash(remoteFile).execute();
 			authHelper.checkResponseWithRetry(response);
 			JsonNode ret = HttpUtil.getValue(response, JsonNode.class);
 			return ret.get("SHA256").toString();

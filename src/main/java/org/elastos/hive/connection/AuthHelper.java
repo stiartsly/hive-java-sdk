@@ -7,6 +7,7 @@ import okhttp3.ResponseBody;
 import org.elastos.did.jwt.Claims;
 import org.elastos.hive.AppContextProvider;
 import org.elastos.hive.exception.HiveException;
+import org.elastos.hive.network.AuthApi;
 import org.elastos.hive.utils.JsonUtil;
 import org.elastos.hive.utils.JwtUtil;
 import org.elastos.hive.utils.HttpUtil;
@@ -99,7 +100,7 @@ public class AuthHelper implements ConnectHelper {
 
 		try {
 			String json = new JSONObject(map).toString();
-			Response response = this.connectionManager.getAuthApi()
+			Response response = this.connectionManager.getNetworkApi(AuthApi.class)
 					.signIn(getJsonRequestBoy(json))
 					.execute();
 			checkResponse(response);
@@ -123,7 +124,7 @@ public class AuthHelper implements ConnectHelper {
 		Map<String, Object> map = new HashMap<>();
 		map.put("jwt", token);
 		String json = new JSONObject(map).toString();
-		Response response = this.connectionManager.getAuthApi()
+		Response response = this.connectionManager.getNetworkApi(AuthApi.class)
 				.auth(getJsonRequestBoy(json))
 				.execute();
 		checkResponse(response);
