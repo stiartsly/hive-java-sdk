@@ -12,8 +12,7 @@ import org.junit.runners.MethodSorters;
 import java.io.*;
 import java.util.concurrent.CompletableFuture;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FilesServiceTest {
@@ -24,10 +23,10 @@ public class FilesServiceTest {
 		Writer writer = null;
 		try {
 			writer = filesApi.upload(remoteTextPath, Writer.class).exceptionally(e -> {
-				System.out.println(e.getMessage());
+				fail();
 				return null;
 			}).get();
-			fileReader = new FileReader(new File(textLocalPath));
+			fileReader = new FileReader(textLocalPath);
 			char[] buffer = new char[1];
 			while (fileReader.read(buffer) != -1) {
 				writer.write(buffer);
@@ -50,7 +49,11 @@ public class FilesServiceTest {
 	@Test
 	public void test02_uploadBin() {
 		try {
-			OutputStream outputStream = filesApi.upload(remoteImgPath, OutputStream.class).get();
+			OutputStream outputStream = filesApi.upload(remoteImgPath, OutputStream.class)
+					.exceptionally(e-> {
+						fail();
+						return null;
+					}).get();
 			byte[] bigStream = Utils.readImage(imgLocalPath);
 			outputStream.write(bigStream);
 			outputStream.close();
@@ -64,7 +67,11 @@ public class FilesServiceTest {
 	@Test
 	public void test03_downloadText() {
 		try {
-			Reader reader = filesApi.download(remoteTextPath, Reader.class).get();
+			Reader reader = filesApi.download(remoteTextPath, Reader.class)
+					.exceptionally(e-> {
+						fail();
+						return null;
+					}).get();
 			Utils.cacheTextFile(reader, rootLocalCachePath, "test.txt");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,7 +82,11 @@ public class FilesServiceTest {
 	@Test
 	public void test04_downloadBin() {
 		try {
-			InputStream inputStream = filesApi.download(remoteImgPath, InputStream.class).get();
+			InputStream inputStream = filesApi.download(remoteImgPath, InputStream.class)
+					.exceptionally(e-> {
+						fail();
+						return null;
+					}).get();
 			Utils.cacheBinFile(inputStream, rootLocalCachePath, "big.png");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,33 +96,16 @@ public class FilesServiceTest {
 
 	@Test
 	public void test05_list() {
-//		CompletableFuture<Boolean> future = filesApi.list(remoteRootPath)
-//				.handle((result, ex) -> {
-//					assertTrue(result.size() > 0);
-//					System.out.println("list size=" + result.size());
-//					return (ex == null);
-//				});
-//
-//		try {
-//			assertTrue(future.get());
-//			assertTrue(future.isCompletedExceptionally() == false);
-//			assertTrue(future.isDone());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			fail();
-//		}
+		//TODO:
 	}
 
 	@Test
 	public void test06_hash() {
-		CompletableFuture<Boolean> future = filesApi.hash(remoteTextPath)
-				.handle((result, ex) -> {
-					return (ex == null);
-				});
-
 		try {
+			CompletableFuture<Boolean> future = filesApi.hash(remoteTextPath)
+					.handle((result, ex) -> ex == null);
 			assertTrue(future.get());
-			assertTrue(future.isCompletedExceptionally() == false);
+			assertFalse(future.isCompletedExceptionally());
 			assertTrue(future.isDone());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,15 +115,12 @@ public class FilesServiceTest {
 
 	@Test
 	public void test07_move() {
-		CompletableFuture<Boolean> future = filesApi.delete(remoteTextBackupPath)
-				.thenCompose(result -> filesApi.move(remoteTextPath, remoteTextBackupPath))
-				.handle((result, ex) -> {
-					return (ex == null);
-				});
-
 		try {
+			CompletableFuture<Boolean> future = filesApi.delete(remoteTextBackupPath)
+					.thenCompose(result -> filesApi.move(remoteTextPath, remoteTextBackupPath))
+					.handle((result, ex) -> ex == null);
 			assertTrue(future.get());
-			assertTrue(future.isCompletedExceptionally() == false);
+			assertFalse(future.isCompletedExceptionally());
 			assertTrue(future.isDone());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,14 +130,11 @@ public class FilesServiceTest {
 
 	@Test
 	public void test08_copy() {
-		CompletableFuture<Boolean> future = filesApi.copy(remoteTextBackupPath, remoteTextPath)
-				.handle((result, ex) -> {
-					return (ex == null);
-				});
-
 		try {
+			CompletableFuture<Boolean> future = filesApi.copy(remoteTextBackupPath, remoteTextPath)
+					.handle((result, ex) -> ex == null);
 			assertTrue(future.get());
-			assertTrue(future.isCompletedExceptionally() == false);
+			assertFalse(future.isCompletedExceptionally());
 			assertTrue(future.isDone());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -157,15 +145,12 @@ public class FilesServiceTest {
 
 	@Test
 	public void test09_deleteFile() {
-		CompletableFuture<Boolean> future = filesApi.delete(remoteTextPath)
-				.thenCompose(result -> filesApi.delete(remoteTextBackupPath))
-				.handle((result, ex) -> {
-					return (ex == null);
-				});
-
 		try {
+			CompletableFuture<Boolean> future = filesApi.delete(remoteTextPath)
+					.thenCompose(result -> filesApi.delete(remoteTextBackupPath))
+					.handle((result, ex) -> ex == null);
 			assertTrue(future.get());
-			assertTrue(future.isCompletedExceptionally() == false);
+			assertFalse(future.isCompletedExceptionally());
 			assertTrue(future.isDone());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -178,9 +163,7 @@ public class FilesServiceTest {
 	public static void setUp() {
 		try {
 			filesApi = TestData.getInstance().getVault().thenApplyAsync(vault -> vault.getFilesService()).join();
-		} catch (HiveException e) {
-			e.printStackTrace();
-		} catch (DIDException e) {
+		} catch (HiveException|DIDException e) {
 			e.printStackTrace();
 		}
 	}
@@ -188,7 +171,9 @@ public class FilesServiceTest {
 	private final String textLocalPath;
 	private final String imgLocalPath;
 	private final String rootLocalCachePath;
+	@SuppressWarnings("unused")
 	private final String textLocalCachePath;
+	@SuppressWarnings("unused")
 	private final String imgLocalCachePath;
 
 	private final String remoteRootPath;

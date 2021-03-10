@@ -17,7 +17,7 @@ public interface FilesApi {
 	Call<FilesList> files(@Query("path") String filename);
 
 	@GET(Constance.API_PATH + "/files/download")
-	Call<ResponseBody> downloader(@Query("path") String filename);
+	Call<ResponseBody> download(@Query("path") String filename);
 
 	@GET(Constance.API_PATH + "/files/properties")
 	Call<FileInfo> getProperties(@Query("path") String filename);

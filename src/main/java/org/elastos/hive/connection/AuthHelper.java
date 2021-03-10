@@ -295,9 +295,9 @@ public class AuthHelper implements ConnectHelper {
 			throw new HiveException("response is null");
 
 		int code = response.code();
-		if (code >= 300 || code<200) {
-			ResponseBody body = (ResponseBody) response.errorBody();
-			String message  = null;
+		if (code >= 300 || code < 200) {
+			ResponseBody body = response.errorBody();
+			String message = null;
 			try {
 				message = body.string();
 			} catch (IOException e) {
@@ -312,7 +312,7 @@ public class AuthHelper implements ConnectHelper {
 			throw new HiveException("response is null");
 
 		int code = response.code();
-		if(code==401) {
+		if (code == 401) {
 			retryLogin();
 		} else {
 			checkResponse(response);

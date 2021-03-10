@@ -41,18 +41,12 @@ class FilesServiceRender implements FilesService {
 
 	@Override
 	public <T> CompletableFuture<T> upload(String path, Class<T> resultType) {
-		return authHelper.checkValid().thenApplyAsync(aVoid -> {
-			try {
-				return uploadImpl(path, resultType);
-			} catch (HiveException e) {
-				throw new CompletionException(e);
-			}
-		});
+		return authHelper.checkValid().thenApplyAsync(aVoid -> uploadImpl(path, resultType));
 	}
 
-	private <T> T uploadImpl(String path, Class<T> resultType) throws HiveException {
+	private <T> T uploadImpl(String path, Class<T> resultType) {
 		try {
-			HttpURLConnection connection = this.connectionManager.openURLConnection(FilesApi.API_UPLOAD + "/" + path);
+			HttpURLConnection connection = connectionManager.openURLConnection(FilesApi.API_UPLOAD + "/" + path);
 			OutputStream outputStream = connection.getOutputStream();
 
 			if(resultType.isAssignableFrom(OutputStream.class)) {
@@ -64,8 +58,8 @@ class FilesServiceRender implements FilesService {
 			} else {
 				throw new HiveException("Not supported result type");
 			}
-		} catch (IOException e) {
-			throw new HiveException(e.getLocalizedMessage());
+		} catch (HiveException|IOException e) {
+			throw new CompletionException(new HiveException(e.getLocalizedMessage()));
 		}
 	}
 
@@ -76,47 +70,33 @@ class FilesServiceRender implements FilesService {
 
 	private <T> T downloadImpl(String remoteFile, Class<T> resultType) {
 		try {
-			Response<ResponseBody> response;
-
-			response = filesApi.downloader(remoteFile).execute();
-			int code = response.code();
-			if(404 == code) {
+			Response<ResponseBody> response = filesApi.download(remoteFile).execute();
+			if (404 == response.code()) {
 				throw new FileNotFoundException(FileNotFoundException.EXCEPTION);
 			}
 
 			authHelper.checkResponseWithRetry(response);
 
-			if(resultType.isAssignableFrom(Reader.class)) {
+			if (resultType.isAssignableFrom(Reader.class)) {
 				Reader reader = HttpUtil.getToReader(response);
 				return resultType.cast(reader);
-			}
-			if (resultType.isAssignableFrom(InputStream.class)){
+			} else if (resultType.isAssignableFrom(InputStream.class)) {
 				InputStream inputStream = HttpUtil.getInputStream(response);
 				return resultType.cast(inputStream);
+			} else {
+				throw new HiveException("Not supported result type");
 			}
-
-			throw new HiveException("Not supported result type");
-		} catch (HiveException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (HiveException | IOException e) {
+			throw new CompletionException(new HiveException(e.getLocalizedMessage()));
 		}
-
-		return null;
 	}
 
 	@Override
 	public CompletableFuture<Boolean> delete(String path) {
-		return authHelper.checkValid().thenApplyAsync(aVoid -> {
-			try {
-				return deleteImpl(path);
-			} catch (HiveException e) {
-				throw new CompletionException(e);
-			}
-		});
+		return authHelper.checkValid().thenApplyAsync(aVoid -> deleteImpl(path));
 	}
 
-	private Boolean deleteImpl(String remoteFile) throws HiveException {
+	private Boolean deleteImpl(String remoteFile) {
 		try {
 			Map<String, String> map = new HashMap<>();
 			map.put("path", remoteFile);
@@ -127,23 +107,17 @@ class FilesServiceRender implements FilesService {
 			response = filesApi.deleteFolder(createJsonRequestBody(json)).execute();
 			authHelper.checkResponseWithRetry(response);
 			return true;
-		} catch (Exception e) {
-			throw new HiveException(e.getLocalizedMessage());
+		} catch (HiveException|IOException e) {
+			throw new CompletionException(new HiveException(e.getLocalizedMessage()));
 		}
 	}
 
 	@Override
 	public CompletableFuture<Boolean> move(String source, String target) {
-		return authHelper.checkValid().thenApplyAsync(aVoid -> {
-			try {
-				return moveImpl(source, target);
-			} catch (HiveException e) {
-				throw new CompletionException(e);
-			}
-		});
+		return authHelper.checkValid().thenApplyAsync(aVoid -> moveImpl(source, target));
 	}
 
-	private Boolean moveImpl(String source, String dest) throws HiveException {
+	private Boolean moveImpl(String source, String dest) {
 		try {
 			Map<String, Object> map = new HashMap<>();
 			map.put("src_path", source);
@@ -155,23 +129,17 @@ class FilesServiceRender implements FilesService {
 			response = filesApi.move(createJsonRequestBody(json)).execute();
 			authHelper.checkResponseWithRetry(response);
 			return true;
-		} catch (Exception e) {
-			throw new HiveException(e.getLocalizedMessage());
+		} catch (HiveException|IOException e) {
+			throw new CompletionException(new HiveException(e.getLocalizedMessage()));
 		}
 	}
 
 	@Override
 	public CompletableFuture<Boolean> copy(String source, String target) {
-		return authHelper.checkValid().thenApplyAsync(aVoid -> {
-			try {
-				return copyImpl(source, target);
-			} catch (HiveException e) {
-				throw new CompletionException(e);
-			}
-		});
+		return authHelper.checkValid().thenApplyAsync(aVoid -> copyImpl(source, target));
 	}
 
-	private Boolean copyImpl(String source, String dest) throws HiveException {
+	private Boolean copyImpl(String source, String dest) {
 		try {
 			Map<String, Object> map = new HashMap<>();
 			map.put("src_path", source);
@@ -183,30 +151,24 @@ class FilesServiceRender implements FilesService {
 			response = filesApi.copy(createJsonRequestBody(json)).execute();
 			authHelper.checkResponseWithRetry(response);
 			return true;
-		} catch (Exception e) {
-			throw new HiveException(e.getLocalizedMessage());
+		} catch (HiveException|IOException e) {
+			throw new CompletionException(new HiveException(e.getLocalizedMessage()));
 		}
 	}
 
 	@Override
 	public CompletableFuture<String> hash(String path) {
-		return authHelper.checkValid().thenApplyAsync(aVoid -> {
-			try {
-				return hashImp(path);
-			} catch (HiveException e) {
-				throw new CompletionException(e);
-			}
-		});
+		return authHelper.checkValid().thenApplyAsync(aVoid -> hashImp(path));
 	}
 
-	private String hashImp(String remoteFile) throws HiveException {
+	private String hashImp(String remoteFile) {
 		try {
-			Response response = filesApi.hash(remoteFile).execute();
+			Response<ResponseBody> response = filesApi.hash(remoteFile).execute();
 			authHelper.checkResponseWithRetry(response);
 			JsonNode ret = HttpUtil.getValue(response, JsonNode.class);
 			return ret.get("SHA256").toString();
-		} catch (Exception e) {
-			throw new HiveException(e.getLocalizedMessage());
+		} catch (HiveException|IOException e) {
+			throw new CompletionException(new HiveException(e.getLocalizedMessage()));
 		}
 	}
 
