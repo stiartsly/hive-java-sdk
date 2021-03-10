@@ -52,7 +52,7 @@ class FilesServiceRender implements FilesService {
 
 	private <T> T uploadImpl(String path, Class<T> resultType) throws HiveException {
 		try {
-			HttpURLConnection connection = this.connectionManager.openURLConnection("/files/upload/" + path);
+			HttpURLConnection connection = this.connectionManager.openURLConnection(FilesApi.API_UPLOAD + "/" + path);
 			OutputStream outputStream = connection.getOutputStream();
 
 			if(resultType.isAssignableFrom(OutputStream.class)) {

@@ -32,16 +32,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Manage connection and network api.
+ * Manage connection and network Apis for hive node request.
  */
 public class ConnectionManager {
 	private Map<String, Object> apis = new HashMap<>();
+	private String baseUrl;
+	private BaseServiceConfig baseConfig;
 
-	private String vaultBaseUrl;
-	private BaseServiceConfig vaultConfig = new BaseServiceConfig.Builder().build() ;
-
-	public ConnectionManager(String baseUrl, BaseServiceConfig baseServiceConfig) {
-		resetVaultApi(baseUrl, baseServiceConfig);
+	public ConnectionManager(String baseUrl, BaseServiceConfig baseConfig) {
+		resetVaultApi(baseUrl, baseConfig);
 	}
 
 	public <T> T getNetworkApi(Class<T> apiCls) {
@@ -51,35 +50,23 @@ public class ConnectionManager {
 		}
 		if (apis.get(name) == null) {
 			apis.put(name, BaseServiceUtil.createService(apiCls,
-					this.vaultBaseUrl, this.vaultConfig));
+					this.baseUrl, this.baseConfig));
 		}
 		return (T)apis.get(name);
 	}
 
-	private void updateVaultConfig(BaseServiceConfig vaultConfig) {
-		this.vaultConfig = vaultConfig;
-	}
-
-	private void updateVaultBaseUrl(String vaultBaseUrl) {
-		this.vaultBaseUrl = vaultBaseUrl;
-	}
-
-	public void resetVaultApi(String baseUrl, BaseServiceConfig baseServiceConfig) {
+	public void resetVaultApi(String baseUrl, BaseServiceConfig baseConfig) {
 		apis.clear();
-		updateVaultBaseUrl(baseUrl);
-		updateVaultConfig(baseServiceConfig);
+		this.baseUrl = baseUrl;
+		this.baseConfig = baseConfig;
 	}
 
-	public String getVaultBaseUrl() {
-		return this.vaultBaseUrl;
+	private String getAccessToken() {
+		return this.baseConfig.getHeaderConfig().getAuthToken().getAccessToken();
 	}
 
-	public String getAccessToken() {
-		return this.vaultConfig.getHeaderConfig().getAuthToken().getAccessToken();
-	}
-
-	public HttpURLConnection openURLConnection(String path) throws IOException {
-		String url = this.getVaultBaseUrl() + UploadApi.API_PATH + path;
+	public HttpURLConnection openURLConnection(String relativeUrl) throws IOException {
+		String url = baseUrl + relativeUrl;
 		HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
 		httpURLConnection.setRequestMethod("POST");
 		httpURLConnection.setRequestProperty("User-Agent",
