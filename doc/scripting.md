@@ -86,7 +86,7 @@ Register a new script for the vault data owner. Script caller will run the scrip
 
 * **Method:**
 
-  `POST`
+  `PUT`
 
 * **Header**
 
@@ -341,7 +341,7 @@ Query documents from the collection.
 }
 ```
 
-- request
+- request params
 
 ```json
 {
@@ -412,7 +412,7 @@ Insert a document to the database collection.
 }
 ```
 
-- request
+- request params
 
 ```json
 {
@@ -466,7 +466,7 @@ Update a document in the database collection.
 }
 ```
 
-- request
+- request params
 
 ```json
 {
@@ -511,7 +511,7 @@ Delete documents from the database collection by the filter.
 }
 ```
 
-- request
+- request params
 
 ```json
 {
@@ -549,7 +549,7 @@ Upload a file to the owner's vault. This will create a new transaction id for th
 }
 ```
 
-- request
+- request params
 
 ```json
 {
@@ -586,7 +586,7 @@ Download a file from the owner's vault. This will also create a new transaction 
 }
 ```
 
-- request
+- request params
 
 ```json
 {
@@ -623,7 +623,7 @@ Get the properties of the file.
 }
 ```
 
-- request
+- request params
 
 ```json
 {
@@ -663,7 +663,7 @@ Get the hash code of the file content.
 }
 ```
 
-- request
+- request params
 
 ```json
 {
@@ -710,7 +710,7 @@ Run the script registered by the owner. Before running the script, the caller ne
 
 * **Method:**
 
-  `POST`
+  `PUT`
 
 * **Header**
 
@@ -721,9 +721,6 @@ Run the script registered by the owner. Before running the script, the caller ne
   None
 
 * **Data Params**
-{
-  "group_id": "2c1093dd0fec383a9d9ac94"
-}
 
 ```json
 {
@@ -786,6 +783,123 @@ Run the script registered by the owner. Before running the script, the caller ne
 
 ## Upload File
 
+Upload file by transaction id returned by running script for the executable type `fileUpload`.
+
+* **URL**
+
+  `/api/v2/scripting/file_upload/{transaction_id}`
+
+* **Method:**
+
+  `POST`
+
+* **Header**
+
+  `Authorization: "token 38b8c2c1093dd0fec383a9d9ac940515"`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  The file content.
+
+* **Success Response:**
+
+  * **Code:** 201 <br />
+  * **Content:**
+
+  None
+
+* **Error Response:**
+
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "Vault not found or not activate for the script." }`
+
+  OR
+
+  * **Code:** `401 UNAUTHORIZED` <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
 ## Download File
 
+Download file by transaction id returned by running script for the executable type `fileDownload`.
+
+* **URL**
+
+  `/api/v2/scripting/file_download/{transaction_id}`
+
+* **Method:**
+
+  `GET`
+
+* **Header**
+
+  `Authorization: "token 38b8c2c1093dd0fec383a9d9ac940515"`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+  * **Content:**
+
+  File content.
+
+* **Error Response:**
+
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "Vault not found or not activate for the script." }`
+
+  OR
+
+  * **Code:** `401 UNAUTHORIZED` <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
 ## Remove Script
+
+Download file by transaction id returned by running script for the executable type `fileDownload`.
+
+* **URL**
+
+  `/api/v2/scripting/remove/{script_name}`
+
+* **Method:**
+
+  `DELETE`
+
+* **Header**
+
+  `Authorization: "token 38b8c2c1093dd0fec383a9d9ac940515"`
+
+* **URL Params**
+
+  None
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 204 <br />
+  * **Content:**
+
+  File content.
+
+* **Error Response:**
+
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "Vault not found or not activate for the script." }`
+
+  OR
+
+  * **Code:** `401 UNAUTHORIZED` <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
