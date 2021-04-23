@@ -10,16 +10,22 @@
 ## List Script
 
 ## Register Script
+
 ----
+
 Register a new script for the vault data owner. Script caller will run the script by name later. The script is treated as the channel for other users to access the owner's data. This will set up a condition and an executable. The condition is checked before running the executable. What the executable can do depends on the type of it. For example, the type "find" can query the documents from a collection.
 
 * **URL**
 
-  /api/v1/scripting/set_script
+  `/api/v2/scripting/set_script/{script_name}`
 
 * **Method:**
 
   `POST`
+
+* **Header**
+
+  `Authorization: "token 38b8c2c1093dd0fec383a9d9ac940515"`
 
 * **URL Params**
 
@@ -320,17 +326,13 @@ There are nine types of executables. Here lists all types with the relating exam
 
 * **Error Response:**
 
-  * **Code:** 404 NOT FOUND <br />
+  * **Code:** `404 NOT FOUND` <br />
     **Content:** `{ error : "Vault not found or not activate for the script." }`
 
   OR
 
-  * **Code:** 401 UNAUTHORIZED <br />
+  * **Code:** `401 UNAUTHORIZED` <br />
     **Content:** `{ error : "You are unauthorized to make this request." }`
-
-* **Sample Call:**
-
-  None
   
 ## Run Script
 
