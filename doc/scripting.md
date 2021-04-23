@@ -687,6 +687,7 @@ Predefined variables can be used for the condition and the executable. The repla
 
     $caller_did: caller user did
     $caller_app_did: caller application did
+    {"$oid": "5f8d9dfe2f4c8b7a6f8ec0f1"}: This represents ObjectId("5f8d9dfe2f4c8b7a6f8ec0f1")
 
 ### Parameter
 
@@ -729,7 +730,7 @@ Run the script registered by the owner. Before running the script, the caller ne
     "target_app_did":"appId"
   },
   "params": {
-    "group_id":{"$oid": "5f8d9dfe2f4c8b7a6f8ec0f1"}
+    "group_id": {"$oid": "5f8d9dfe2f4c8b7a6f8ec0f1"}
   }
 }
 ```
