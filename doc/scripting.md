@@ -1,4 +1,3 @@
-- [List Script](#list-script)
 - [Register Script](#register-script)
   - [Condition](#condition)
   - [Executable](#executable)
@@ -18,71 +17,13 @@
 - [Download File](#download-file)
 - [Remove Script](#remove-script)
 
-
-## List Script
-
-List all scripts for vault data owner or caller. The caller of the script can check which script can be used.
-
-* **URL**
-
-  `/api/v2/scripting/list`
-
-* **Method:**
-
-  `GET`
-
-* **Header**
-
-  `Authorization: "token 38b8c2c1093dd0fec383a9d9ac940515"`
-
-* **URL Params**
-
-  None
-
-* **Data Params**
-
-  None
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-  * **Content:**
-
-```json
-{
-  "scripts": [
-    {
-      "name": "get_messages",
-      "executables": {
-        "find_messages": {
-          "type": "find",
-          "params": ["group_id"]
-        }
-      }
-    }
-  ]
-}
-```
-
-`find_messages` is the executable name which contains the type and parameters of the executable.
-
-* **Error Response:**
-
-  * **Code:** `404 NOT FOUND` <br />
-    **Content:** `{ error : "Vault not found or not activate for the script." }`
-
-  OR
-
-  * **Code:** `401 UNAUTHORIZED` <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
-
 ## Register Script
 
 Register a new script for the vault data owner. Script caller will run the script by name later. The script is treated as the channel for other users to access the owner's data. This will set up a condition and an executable. The condition is checked before running the executable. What the executable can do depends on the type of it. For example, the type "find" can query the documents from a collection.
 
 * **URL**
 
-  `/api/v2/scripting/set/{script_name}`
+  `/api/v2/vault/scripting/{script_name}`
 
 * **Method:**
 
@@ -707,11 +648,11 @@ Run the script registered by the owner. Before running the script, the caller ne
 
 * **URL**
 
-  `/api/v2/scripting/run/{script_name}`
+  `/api/v2/vault/scripting/{script_name}`
 
 * **Method:**
 
-  `PUT`
+  `PATCH`
 
 * **Header**
 
@@ -788,7 +729,7 @@ Upload file by transaction id returned by running script for the executable type
 
 * **URL**
 
-  `/api/v2/scripting/file_upload/{transaction_id}`
+  `/api/v2/vault/scripting/streaming/{transaction_id}`
 
 * **Method:**
 
@@ -829,7 +770,7 @@ Download file by transaction id returned by running script for the executable ty
 
 * **URL**
 
-  `/api/v2/scripting/file_download/{transaction_id}`
+  `/api/v2/vault/scripting/streaming/{transaction_id}`
 
 * **Method:**
 
@@ -870,7 +811,7 @@ Download file by transaction id returned by running script for the executable ty
 
 * **URL**
 
-  `/api/v2/scripting/remove/{script_name}`
+  `/api/v2/vault/scripting/{script_name}`
 
 * **Method:**
 
