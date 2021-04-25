@@ -92,13 +92,13 @@ Key **find_messages** is the executable name.
 
 * **Error Response:**
 
-  * **Code:** `404 NOT FOUND` <br />
-    **Content:** `{ error : "Vault not found or not activate for the script." }`
+  * **Code:** `401 UNAUTHORIZED` <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
 
   OR
 
-  * **Code:** `401 UNAUTHORIZED` <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "Vault not found or not activate for the script." }`
 
 ### Condition
 
@@ -715,13 +715,18 @@ Run the script registered by the owner. Before running the script, the caller ne
 
 * **Error Response:**
 
+  * **Code:** `401 UNAUTHORIZED` <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+
   * **Code:** `404 NOT FOUND` <br />
     **Content:** `{ error : "Vault not found or not activate for the script." }`
 
   OR
 
-  * **Code:** `401 UNAUTHORIZED` <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "The script tried to run does not exist." }`
 
 ## Upload File
 
@@ -756,13 +761,13 @@ Upload file by transaction id returned by running script for the executable type
 
 * **Error Response:**
 
-  * **Code:** `404 NOT FOUND` <br />
-    **Content:** `{ error : "Vault not found or not activate for the script." }`
+  * **Code:** `401 UNAUTHORIZED` <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
 
   OR
 
-  * **Code:** `401 UNAUTHORIZED` <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "Vault not found or not activate for the script." }`
 
 ## Download File
 
@@ -797,13 +802,18 @@ Download file by transaction id returned by running script for the executable ty
 
 * **Error Response:**
 
+  * **Code:** `401 UNAUTHORIZED` <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+  OR
+
   * **Code:** `404 NOT FOUND` <br />
     **Content:** `{ error : "Vault not found or not activate for the script." }`
 
   OR
 
-  * **Code:** `401 UNAUTHORIZED` <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "The file tried to download does not exist." }`
 
 ## Remove Script
 
@@ -838,10 +848,15 @@ Download file by transaction id returned by running script for the executable ty
 
 * **Error Response:**
 
-  * **Code:** `404 NOT FOUND` <br />
-    **Content:** `{ error : "Vault not found or not activate for the script." }`
+  * **Code:** `401 UNAUTHORIZED` <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
 
   OR
 
-  * **Code:** `401 UNAUTHORIZED` <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "Vault not found or not activate for the script." }`
+    
+  OR
+
+  * **Code:** `404 NOT FOUND` <br />
+    **Content:** `{ error : "The script tried to remove does not exist." }`
